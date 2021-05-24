@@ -68,6 +68,10 @@ const syncAndSeed = async () => {
     };
 };
 
+User.prototype.verifyPassword = function (inputPassword) {
+  return inputPassword === this.password;
+}
+
 User.beforeCreate(async function hashPassword(user) {
     const SALT_COUNT = 5;
     const hashedPw = await bcrypt.hash(user.password, SALT_COUNT);
