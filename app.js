@@ -3,7 +3,7 @@ const app = express();
 const jwt = require("jsonwebtoken");
 app.use(express.json());
 const {
-    models: { User }
+    models: { User, Note }
 } = require("./db");
 const path = require("path");
 const SECRET = process.env.JWT;
@@ -37,6 +37,16 @@ app.get("/api/auth", async (req, res, next) => {
         next(ex);
     }
 });
+
+app.get("/api/users/:id/notes", async (req, res, next) => {
+  try {
+    const userNotes = await User.findByPk(req.params.id, {include: [
+      { model: Note}]})
+    res.status(200).json(userNotes)
+  } catch (error) {
+    console.log("WHOOPS"), next(error)
+  }
+})
 
 app.use((err, req, res, next) => {
     console.log(err);
